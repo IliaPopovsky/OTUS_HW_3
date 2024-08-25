@@ -34,6 +34,10 @@
 		<Unit filename="counting_using_hash_tables.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="hash_functions.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="hash_functions.h" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
