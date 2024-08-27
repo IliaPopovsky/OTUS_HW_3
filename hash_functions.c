@@ -1,3 +1,4 @@
+//#include <ctype.h>
 int hash_function(const char *string, int size_array)
 {
    int counter = 0;
@@ -61,32 +62,78 @@ int hash_function(const char *string, int size_array)
                      break;
            case '\'': temp = 101;
                      break;
+       }
+       sum = sum + temp;
+       counter++;
+   }
+   sum = sum * 103;
+   sum = sum % size_array;
+   return sum;
+}
 
-           #if 0
+int hash_function1(const char *string, int size_array)
+{
+   int counter = 0;
+   int temp = 0;
+   int sum = 0;
+   while(*(string + counter) != '\0')
+   {
+       switch(tolower(*(string + counter)))
+       {
            case 'a': temp = 1;
+                     break;
            case 'b': temp = 3;
+                     break;
            case 'c': temp = 7;
+                     break;
            case 'd': temp = 13;
+                     break;
            case 'e': temp = 19;
+                     break;
            case 'f': temp = 29;
+                     break;
            case 'g': temp = 37;
+                     break;
            case 'h': temp = 43;
+                     break;
            case 'i': temp = 53;
-
-
-
-           case 'A': temp = 2;
-           case 'B': temp = 5;
-           case 'C': temp = 11;
-           case 'D': temp = 17;
-           case 'E': temp = 23;
-           case 'F': temp = 31;
-           case 'G': temp = 41;
-           case 'H': temp = 47;
-           case 'I': temp = 59;
-           #endif
-
-
+                     break;
+           case 'j': temp = 61;
+                     break;
+           case 'k': temp = 71;
+                     break;
+           case 'l': temp = 79;
+                     break;
+           case 'm': temp = 89;
+                     break;
+           case 'n': temp = 101;
+                     break;
+           case 'o': temp = 107;
+                     break;
+           case 'p': temp = 113;
+                     break;
+           case 'q': temp = 131;
+                     break;
+           case 'r': temp = 139;
+                     break;
+           case 's': temp = 151;
+                     break;
+           case 't': temp = 163;
+                     break;
+           case 'u': temp = 173;
+                     break;
+           case 'v': temp = 181;
+                     break;
+           case 'w': temp = 193;
+                     break;
+           case 'x': temp = 199;
+                     break;
+           case 'y': temp = 223;
+                     break;
+           case 'z': temp = 229;
+                     break;
+           case '\'': temp = 239;
+                     break;
        }
        sum = sum + temp;
        counter++;
