@@ -14,7 +14,11 @@ typedef struct HTnode{
 } HTnode;
 
 
-int hash_function(const char *string, int size_array);
-int hash_function1(const char *string, int size_array);
+long long int hash_function(const char *string, long long int size_array);
+long long int hash_function1(const char *string, long long int size_array);
+long long int hash_function2(const char *string, long long int size_array);
+long long int hash_function3(const char *string, long long int size_array);
+long long int hash_function4(const char *string, long long int size_array);
+long long int hash_function5(const char *string, long long int size_array);
 
 #endif // HASH_FUNCTIONS_H_INCLUDED

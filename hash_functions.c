@@ -1,9 +1,9 @@
 //#include <ctype.h>
-int hash_function(const char *string, int size_array)
+long long int hash_function(const char *string, long long int size_array)
 {
    int counter = 0;
-   int temp = 0;
-   int sum = 0;
+   long long int temp = 0;
+   long long int sum = 0;
    while(*(string + counter) != '\0')
    {
        switch(tolower(*(string + counter)))
@@ -71,11 +71,11 @@ int hash_function(const char *string, int size_array)
    return sum;
 }
 
-int hash_function1(const char *string, int size_array)
+long long int hash_function1(const char *string, long long int size_array)
 {
    int counter = 0;
-   int temp = 0;
-   int sum = 0;
+   long long int temp = 0;
+   long long int sum = 0;
    while(*(string + counter) != '\0')
    {
        switch(tolower(*(string + counter)))
@@ -138,5 +138,177 @@ int hash_function1(const char *string, int size_array)
        sum = sum + temp;
        counter++;
    }
+   sum = sum % size_array;
    return sum;
 }
+
+long long int hash_function2(const char *string, long long int size_array)
+{
+   int counter = 0;
+   long long int temp = 0;
+   long long int sum = 0;
+   while(*(string + counter) != '\0')
+   {
+       switch(tolower(*(string + counter)))
+       {
+           case 'a': temp = 1;
+                     break;
+           case 'b': temp = 5;
+                     break;
+           case 'c': temp = 13;
+                     break;
+           case 'd': temp = 13;
+                     break;
+           case 'e': temp = 23;
+                     break;
+           case 'f': temp = 37;
+                     break;
+           case 'g': temp = 47;
+                     break;
+           case 'h': temp = 61;
+                     break;
+           case 'i': temp = 73;
+                     break;
+           case 'j': temp = 89;
+                     break;
+           case 'k': temp = 103;
+                     break;
+           case 'l': temp = 113;
+                     break;
+           case 'm': temp = 137;
+                     break;
+           case 'n': temp = 151;
+                     break;
+           case 'o': temp = 167;
+                     break;
+           case 'p': temp = 179;
+                     break;
+           case 'q': temp = 193;
+                     break;
+           case 'r': temp = 211;
+                     break;
+           case 's': temp = 229;
+                     break;
+           case 't': temp = 241;
+                     break;
+           case 'u': temp = 263;
+                     break;
+           case 'v': temp = 277;
+                     break;
+           case 'w': temp = 293;
+                     break;
+           case 'x': temp = 313;
+                     break;
+           case 'y': temp = 337;
+                     break;
+           case 'z': temp = 359;
+                     break;
+           case '\'': temp = 379;
+                     break;
+       }
+       sum = sum + temp;
+       counter++;
+   }
+   sum = sum % size_array;
+   return sum;
+}
+
+long long int hash_function3(const char *string, long long int size_array)
+{
+   int counter = 0;
+   long long int sum = 0;
+   while(*(string + counter) != '\0')
+   {
+       sum = sum + tolower(*(string + counter)) * pow(23, counter); //cup_of_tea //6 при x7(11k) // 19 при x7(9k) // 23 при x7(7k) // 29 при x7(8k)
+       counter++;
+   }
+   sum = sum % size_array;
+   return sum;
+}
+
+long long int hash_function4(const char *string, long long int size_array)
+{
+   int counter = 0;
+   long long int temp = 0;
+   long long int sum = 0;
+   while(*(string + counter) != '\0')
+   {
+       switch(tolower(*(string + counter)))
+       {
+           case 'a': temp = 1;
+                     break;
+           case 'b': temp = 5;
+                     break;
+           case 'c': temp = 7;
+                     break;
+           case 'd': temp = 11;
+                     break;
+           case 'e': temp = 13;
+                     break;
+           case 'f': temp = 23;
+                     break;
+           case 'g': temp = 29;
+                     break;
+           case 'h': temp = 31;
+                     break;
+           case 'i': temp = 37;
+                     break;
+           case 'j': temp = 47;
+                     break;
+           case 'k': temp = 53;
+                     break;
+           case 'l': temp = 59;
+                     break;
+           case 'm': temp = 61;
+                     break;
+           case 'n': temp = 73;
+                     break;
+           case 'o': temp = 79;
+                     break;
+           case 'p': temp = 83;
+                     break;
+           case 'q': temp = 89;
+                     break;
+           case 'r': temp = 103;
+                     break;
+           case 's': temp = 107;
+                     break;
+           case 't': temp = 109;
+                     break;
+           case 'u': temp = 113;
+                     break;
+           case 'v': temp = 137;
+                     break;
+           case 'w': temp = 139;
+                     break;
+           case 'x': temp = 149;
+                     break;
+           case 'y': temp = 151;
+                     break;
+           case 'z': temp = 167;
+                     break;
+           case '\'': temp = 179;
+                     break;
+       }
+       sum = sum + temp;
+       counter++;
+   }
+   //sum = sum * 103;
+   sum = sum % size_array;
+   return sum;
+}
+
+long long int hash_function5(const char *string, long long int size_array)
+{
+   int counter = 0;
+   long long int sum = 0;
+   while(*(string + counter) != '\0')
+   {
+       sum = sum + *(string + counter);
+       counter++;
+   }
+
+   sum = sum % size_array;
+   return sum;
+}
+
