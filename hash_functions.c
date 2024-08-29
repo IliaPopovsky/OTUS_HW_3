@@ -62,11 +62,13 @@ long long int hash_function(const char *string, long long int size_array)
                      break;
            case '\'': temp = 101;
                      break;
+           case '-': temp = 103;
+                     break;
        }
        sum = sum + temp;
        counter++;
    }
-   sum = sum * 103;
+   sum = sum * 107;
    sum = sum % size_array;
    return sum;
 }
@@ -134,10 +136,13 @@ long long int hash_function1(const char *string, long long int size_array)
                      break;
            case '\'': temp = 239;
                      break;
+           case '-': temp = 251;
+                     break;
        }
        sum = sum + temp;
        counter++;
    }
+   sum = sum * 263;
    sum = sum % size_array;
    return sum;
 }
@@ -205,10 +210,12 @@ long long int hash_function2(const char *string, long long int size_array)
                      break;
            case '\'': temp = 379;
                      break;
+           case '-': temp = 397;
        }
        sum = sum + temp;
        counter++;
    }
+   sum = sum * 419;
    sum = sum % size_array;
    return sum;
 }
@@ -289,11 +296,13 @@ long long int hash_function4(const char *string, long long int size_array)
                      break;
            case '\'': temp = 179;
                      break;
+           case '-': temp = 193;
+                     break;
        }
        sum = sum + temp;
        counter++;
    }
-   //sum = sum * 103;
+   sum = sum * 211;
    sum = sum % size_array;
    return sum;
 }
@@ -307,7 +316,7 @@ long long int hash_function5(const char *string, long long int size_array)
        sum = sum + *(string + counter);
        counter++;
    }
-
+   sum = sum * sum;
    sum = sum % size_array;
    return sum;
 }
