@@ -321,3 +321,5 @@ long long int hash_function5(const char *string, long long int size_array)
    return sum;
 }
 
+
+

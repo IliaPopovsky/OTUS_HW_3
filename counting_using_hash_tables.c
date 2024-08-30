@@ -29,6 +29,8 @@ int main(int argc, char *argv[])
     long long int index = 0;
     int counter_collision = 0;
     int counter_writes = 0;
+    int flag_delete = 0;
+    int flag_redaction = 0;
 
     HTnode *pointer_htnode;
 
@@ -117,7 +119,7 @@ int main(int argc, char *argv[])
             memset(read_word, 0, WORDLEN);
         }
         printf("\nУ нас вышло %d коллизий.\n", counter_collision);
-        printf("У нас вышел коэффициент заполнения равен %.2f\n", coefficient_filling);
+        printf("В данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n", coefficient_filling);
         for(int i = 0; i < size; i++)
         {
             sum_words = sum_words + (pointer_htnode + i)->item.quantity;
@@ -215,7 +217,7 @@ int main(int argc, char *argv[])
                memset(read_word, 0, WORDLEN);
         }
         printf("\nУ нас вышло %d коллизий.\n", counter_collision);
-        printf("У нас вышел коэффициент заполнения равен %.2f\n", coefficient_filling);
+        printf("В данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n", coefficient_filling);
         for(int i = 0; i < size; i++)
         {
             sum_words = sum_words + (pointer_htnode + i)->item.quantity;
@@ -230,6 +232,7 @@ int main(int argc, char *argv[])
         fprintf(stdout, "Выберите дальнейшее действие:\n");
         fprintf(stdout, "a) Вывод списка всех слов с указанием их поторений.\n");
         fprintf(stdout, "b) Ввод слова для проверки количества вхождений этого слова в файле %s.:\n", argv[1]);
+        fprintf(stdout, "c) Добавить слово в наше хранилище данных в виде хеш-таблицы.\n");
         fprintf(stdout, "q) Выход из программы.\n");
         fscanf(stdin, "%c", &read_char);
         while(getchar() != '\n')  // очистка буфера ввода после вызова scanf()
@@ -243,6 +246,7 @@ int main(int argc, char *argv[])
               if((pointer_htnode + i)->item.word[0] != '\0')
                  printf("Слово: %s, встречается %d, его индекс %d\n", (pointer_htnode + i)->item.word, (pointer_htnode + i)->item.quantity, i);
            }
+           printf("\nВ данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n", coefficient_filling);
            goto menu_consol;
         }
         if(read_char == 'b')
@@ -270,13 +274,43 @@ int main(int argc, char *argv[])
             if(read_word[0] != '\0')  // нужно иначе будут записываться дефисы заменяные на '\0'
                if((pointer_htnode + index)->item.word[0] == '\0')
                {
-                  printf("Введенное слово ни разу не встречается в файле %s\n", argv[1]);
+                  if(flag_redaction == 0)
+                      printf("Введенное слово ни разу не встречается в файле %s\n", argv[1]);
+                  else
+                  {
+                      printf("Наше хранилище данных в виде хеш-таблицы подвергалось редактированию пользователем"
+                             "поэтому его содержимое отличается от начального содержимого записанного из файла %s\n", argv[1]);
+                      printf("Введенное слово ни разу не встречается в нашем хранилище данных в виде хеш-таблицы\n");
+                  }
+
                }
                else
                {
                  if(strcmp((pointer_htnode + index)->item.word, read_word) == 0)
                  {
-                     printf("Слово %s встречается %d раз в текстовом файле %s\n", read_word, (pointer_htnode + index)->item.quantity, argv[1]);
+                     if(flag_redaction == 0)
+                         printf("Слово %s встречается %d раз в текстовом файле %s\n", read_word, (pointer_htnode + index)->item.quantity, argv[1]);
+                     else
+                     {
+                         printf("Наше хранилище данных в виде хеш-таблицы подвергалось редактированию пользователем"
+                             "поэтому его содержимое отличается от начального содержимого записанного из файла %s\n", argv[1]);
+                         printf("Слово %s встречается нашем хранилище данных в виде хеш-таблицы и имеет индекс %d\n", read_word, index);
+                     }
+                     printf("Хотите удалить данное слово из нашего хранилища данных в виде хеш-таблицы?\n");
+                     printf("Введите 1 если ДА или введите 2 (или любое другое число кроме 1) если НЕТ:\n");
+                     printf("1) ДА\n");
+                     printf("2) НЕТ\n");
+                     fscanf(stdin, "%d", &flag_delete);
+                     while(getchar() != '\n')  // очистка буфера ввода после вызова scanf()
+                        continue;
+                     if(flag_delete == 1)
+                     {
+                        memset((pointer_htnode + index)->item.word, 0, WORDLEN);
+                        (pointer_htnode + index)->item.quantity = 0;
+                        printf("Слово %s было удалено из нашего хранилища данных в виде хеш-таблицы.\n", read_word);
+                        printf("В данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n", coefficient_filling);
+                        flag_delete = 0;
+                     }
                  }
                  else
                  {
@@ -287,6 +321,14 @@ int main(int argc, char *argv[])
                }
                memset(read_word, 0, WORDLEN);
             goto menu_consol;
+        }
+        if(read_char == 'c')
+        {
+            printf("В данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n", coefficient_filling);
+            fprintf(stdout, "Введите слово которое вы хотите добавитьв наше хранилище данных в виде хеш-таблицы:\n");
+            fscanf(stdin, "%s", read_word);
+            while(getchar() != '\n')  // очистка буфера ввода после вызова scanf()
+                continue;
         }
         if(read_char == 'q')
         {
