@@ -226,7 +226,7 @@ long long int hash_function3(const char *string, long long int size_array)
    long long int sum = 0;
    while(*(string + counter) != '\0')
    {
-       sum = sum + tolower(*(string + counter)) * pow(23, counter); //cup_of_tea //6 при x7(11k) // 19 при x7(9k) // 23 при x7(7k) // 29 при x7(8k)
+       sum = sum + tolower(*(string + counter)) * pow(23, counter);
        counter++;
    }
    sum = sum % size_array;
@@ -320,6 +320,7 @@ long long int hash_function5(const char *string, long long int size_array)
    sum = sum % size_array;
    return sum;
 }
+
 
 
 

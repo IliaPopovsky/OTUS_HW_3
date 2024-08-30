@@ -21,4 +21,5 @@ long long int hash_function3(const char *string, long long int size_array);
 long long int hash_function4(const char *string, long long int size_array);
 long long int hash_function5(const char *string, long long int size_array);
 
+
 #endif // HASH_FUNCTIONS_H_INCLUDED
