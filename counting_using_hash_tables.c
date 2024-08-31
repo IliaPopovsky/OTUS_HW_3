@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include<string.h>
 #include <windows.h>
 #include <math.h>
 #include "hash_functions.h"
@@ -8,23 +9,27 @@
 #define ARRAY_MULTIPLIER 3
 
 
-//#define WORDLEN 25
+#define WORDLEN 25
 
 void word_cleaning(char *ptr);
 
-int counter_words = 0;
-char read_word[WORDLEN];
-int sum_words = 0;
+//int counter_words = 0;
+//char read_word[WORDLEN];
+//int sum_words = 0;
 //HTnode collision_words[100000] = {0};
 
 
 int main(int argc, char *argv[])
 {
+
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
+    int counter_words = 0;
+    char read_word[WORDLEN];
+    int sum_words = 0;
     FILE *fs;
-    int read_char = 0;
-    long long size = 0;
+    char read_char = 0;
+    long long int size = 0;
     double coefficient_filling = 0.0;
     long long int index = 0;
     int counter_collision = 0;
@@ -92,7 +97,7 @@ int main(int argc, char *argv[])
             }
         }
 
-        printf("Размер выделенного под хеш-таблицу массива равен %d элемента.\n", size);
+        printf("Размер выделенного под хеш-таблицу массива равен %lld элемента.\n", size);
         //fseek(fs, 0L, SEEK_SET); // перейти в начало файла
         if(flag_technical_information_output == 1)
         printf("Записанные индексы массива хеш-таблицы:\n");
@@ -116,33 +121,37 @@ int main(int argc, char *argv[])
                 index = -index;
             first_write0:
             if(read_word[0] != '\0')  // нужно иначе будут записываться дефисы заменяные на '\0'
-            if((pointer_htnode + index)->item.word[0] == '\0')
             {
-                strcpy((pointer_htnode + index)->item.word, read_word);
-                (pointer_htnode + index)->item.quantity++;
-                counter_writes++;
-                coefficient_filling = (double)counter_writes / size;
-                //printf("%s %lld ", read_word, index);
-                if(flag_technical_information_output == 1)
-                printf("%lld ", index);
-            }
-            else
-            {
-                if(strcmp((pointer_htnode + index)->item.word, read_word) == 0)
-                    (pointer_htnode + index)->item.quantity++;
+                if((pointer_htnode + index)->item.word[0] == '\0')
+                {
+                   strcpy((pointer_htnode + index)->item.word, read_word);
+                   (pointer_htnode + index)->item.quantity++;
+                   counter_writes++;
+                   coefficient_filling = (double)counter_writes / size;
+                   //printf("%s %lld ", read_word, index);
+                   if(flag_technical_information_output == 1)
+                      fprintf(stdout, "%lld ", index);
+                }
                 else
                 {
-                    if(flag_technical_information_output == 1)
-                    {
+                  if(strcmp((pointer_htnode + index)->item.word, read_word) == 0)
+                  {
+                      (pointer_htnode + index)->item.quantity++;
+                  }
+                  else
+                  {
+                      if(flag_technical_information_output == 1)
+                      {
                         strcpy(collision_words[counter_collision].item.word, read_word);
                         collision_words[counter_collision].item.quantity = index;
 
-                    }
-                    counter_collision++;
-                    index++;
-                    goto first_write0;
-                }
+                      }
+                      counter_collision++;
+                      index++;
+                      goto first_write0;
+                  }
 
+                }
             }
             memset(read_word, 0, WORDLEN);
         }
@@ -217,7 +226,7 @@ int main(int argc, char *argv[])
 
             }
         }
-        printf("Размер, выделенного под нашу хеш-таблицу, массива равен %d элемента.\n", size);
+        printf("Размер, выделенного под нашу хеш-таблицу, массива равен %lld элемента.\n", size);
         if(flag_technical_information_output == 1)
         printf("Записанные индексы массива хеш-таблицы:\n");
         while(fscanf(fs, "%s", read_word) != EOF)
@@ -239,6 +248,7 @@ int main(int argc, char *argv[])
                 index = -index;
             first_write:
             if(read_word[0] != '\0')  // нужно иначе будут записываться дефисы заменяные на '\0'
+            {
                if((pointer_htnode + index)->item.word[0] == '\0')
                {
                   strcpy((pointer_htnode + index)->item.word, read_word);
@@ -247,7 +257,8 @@ int main(int argc, char *argv[])
                   coefficient_filling = (double)counter_writes / size;
                   //printf("%s %lld ", read_word, index);
                   if(flag_technical_information_output == 1)
-                  printf("%lld ", index);
+                         printf("%lld ", index);
+
                }
                else
                {
@@ -266,7 +277,8 @@ int main(int argc, char *argv[])
                  }
 
                }
-               memset(read_word, 0, WORDLEN);
+            }
+            memset(read_word, 0, WORDLEN);
         }
         if(flag_technical_information_output == 1)
         printf("\nУ нас вышло %d коллизий.\n", counter_collision);
@@ -328,24 +340,25 @@ int main(int argc, char *argv[])
                 index = -index;
             first_read:
             if(read_word[0] != '\0')  // нужно иначе будут записываться дефисы заменяные на '\0'
-               if((pointer_htnode + index)->item.word[0] == '\0')
-               {
-                  printf("Введенное слово ни разу не встречается в файле %s\n", argv[1]);
+            {
+                if((pointer_htnode + index)->item.word[0] == '\0')
+                {
+                   printf("Введенное слово ни разу не встречается в файле %s\n", argv[1]);
                 }
-               else
-               {
-                 if(strcmp((pointer_htnode + index)->item.word, read_word) == 0)
-                 {
-                    printf("Слово %s встречается %d раз в текстовом файле %s\n", read_word, (pointer_htnode + index)->item.quantity, argv[1]);
-                 }
-                 else
-                 {
-                    index++;
-                    goto first_read;
-                 }
-
-               }
-               memset(read_word, 0, WORDLEN);
+                else
+                {
+                   if(strcmp((pointer_htnode + index)->item.word, read_word) == 0)
+                   {
+                      printf("Слово %s встречается %d раз в текстовом файле %s\n", read_word, (pointer_htnode + index)->item.quantity, argv[1]);
+                   }
+                   else
+                   {
+                      index++;
+                      goto first_read;
+                   }
+                }
+            }
+            memset(read_word, 0, WORDLEN);
             goto menu_consol;
         }
         if(read_char == 'q')
@@ -369,8 +382,8 @@ void word_cleaning(char *ptr)
     char temp[WORDLEN] = {0};
     for(counter = 0; *(ptr + counter) != '\0'; counter++)
     {
-        if('A' <= *(ptr + counter) && *(ptr + counter) <= 'Z' || 'a' <= *(ptr + counter) && *(ptr + counter) <= 'z' ||
-           '0' <= *(ptr + counter) && *(ptr + counter) <= '9' || *(ptr + counter) == '\'' || *(ptr + counter) == '-')
+        if(('A' <= *(ptr + counter) && *(ptr + counter) <= 'Z') || ('a' <= *(ptr + counter) && *(ptr + counter) <= 'z') ||
+           ('0' <= *(ptr + counter) && *(ptr + counter) <= '9') || (*(ptr + counter) == '\'') || (*(ptr + counter) == '-'))
         {
             *(temp + counter_temp) = tolower(*(ptr + counter));
             counter_temp++;

@@ -1,4 +1,5 @@
-//#include <ctype.h>
+#include <ctype.h>
+#include <math.h>
 long long int hash_function(const char *string, long long int size_array)
 {
    int counter = 0;
