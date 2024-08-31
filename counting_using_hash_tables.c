@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include<string.h>
+#include <string.h>
 #include "hash_functions.h"
 #define HASH_FUNCTION_NUMBER 3
 #define ARRAY_MULTIPLIER 3
