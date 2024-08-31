@@ -3,21 +3,13 @@
 #include <ctype.h>
 #include<string.h>
 #include <windows.h>
-#include <math.h>
 #include "hash_functions.h"
 #define HASH_FUNCTION_NUMBER 3
 #define ARRAY_MULTIPLIER 3
-
-
 #define WORDLEN 25
 
 void word_cleaning(char *ptr);
-
-//int counter_words = 0;
-//char read_word[WORDLEN];
-//int sum_words = 0;
-//HTnode collision_words[100000] = {0};
-
+double pow(double value, double power);
 
 int main(int argc, char *argv[])
 {
@@ -38,12 +30,12 @@ int main(int argc, char *argv[])
 
     HTnode *pointer_htnode = NULL;
     HTnode *collision_words = NULL;
-    fprintf(stdout, "Выводить техническую информацию о построении хеш-таблицы?\n");
-    fprintf(stdout, "Введите 1 если ДА или 2 (или любое другое число кроме 1) если НЕТ:\n");
-    fprintf(stdout, "1) ДА\n");
-    fprintf(stdout, "2) НЕТ\n");
+    fprintf(stdout, "Display technical information about hash table construction?\n");
+    fprintf(stdout, "Enter 1 if YES or 2 (or any number other than 1) if NO:\n");
+    fprintf(stdout, "1) YES\n");
+    fprintf(stdout, "2) NO\n");
     fscanf(stdin, "%d", &flag_technical_information_output);
-    while(getchar() != '\n')  // очистка буфера ввода после вызова scanf()
+    while(getchar() != '\n')  // clearing the input buffer after a call fscanf()
             continue;
 
     if(argc < 2)
@@ -185,50 +177,47 @@ int main(int argc, char *argv[])
     {
         if((fs = fopen(argv[1], "rb")) == NULL )
         {
-            fprintf(stderr, "Не удается открыть файл %s\n", argv[1]);
+            fprintf(stderr, "Can't open file %s\n", argv[1]);
             exit(EXIT_FAILURE);
         }
          while(fscanf(fs, "%s", read_word) != EOF)
         {
             if(isalnum(read_word[0]) || isalnum(read_word[1]))
-               counter_words++;
-            //fprintf(stdout, "%s ", read_word);
-            //if(getc(fs) == '\n')
-              // putc('\n', stdout);
+                counter_words++;
             memset(read_word, 0, WORDLEN);
         }
-        fprintf(stdout, "\nВ данном текстовом файле %d слов.\n", counter_words);
-        fseek(fs, 0L, SEEK_SET); // перейти в начало файла
+        fprintf(stdout, "\nIn this text file of %d words.\n", counter_words);
+        fseek(fs, 0L, SEEK_SET); // go to the beginning of the file
 
-        size = counter_words * ARRAY_MULTIPLIER; // либо хеш-функция 3 для количество слов * 3  и 2 коллизии
+        size = counter_words * ARRAY_MULTIPLIER;
         if((pointer_htnode = (HTnode *)calloc(size, sizeof(HTnode))) == NULL)
         {
-            fprintf(stdout, "Не хватает места в оперативной памяти для построения данного массива хеш-таблицы, при условии анализа исходного текстового файла целиком.\n"
-                   "Рассмотрите вариант анализа исходного текстового файла частями.\n");
+            fprintf(stdout, "There is not enough memory space to construct this hash table array, provided that the entire source text file is analyzed.\n"
+                   "Consider analyzing the original text file in parts.\n");
             exit(1);
         }
         else
         {
-            fprintf(stdout, "Хватает места в оперативной памяти для построения данного массива хеш-таблицы, при условии анализа исходного текстового файла целиком.\n");
+            fprintf(stdout, "There is enough memory space to construct this hash table array, provided that the entire source text file is analyzed.\n");
 
         }
         if(flag_technical_information_output == 1)
         {
             if((collision_words = (HTnode *)calloc(size, sizeof(HTnode))) == NULL)
             {
-               fprintf(stdout, "Не хватает места в оперативной памяти для построения данного массива коллизий, при условии анализа исходного текстового файла целиком.\n"
-                   "Рассмотрите вариант анализа исходного текстового файла частями.\n");
+               fprintf(stdout, "There is not enough memory space to build this array of collisions, provided that the entire source text file is analyzed.\n"
+                   "Consider changing the size of the collision array.\n");
                exit(1);
             }
             else
             {
-               fprintf(stdout, "Хватает места в оперативной памяти для построения данного массива коллизий, при условии анализа исходного текстового файла целиком.\n");
+               fprintf(stdout, "There is enough memory space to build this array of collisions, provided that the entire source text file is analyzed.\n");
 
             }
         }
-        printf("Размер, выделенного под нашу хеш-таблицу, массива равен %lld элемента.\n", size);
+        printf("The size of the array allocated for our hash table is equal to the %lld elements.\n", size);
         if(flag_technical_information_output == 1)
-        printf("Записанные индексы массива хеш-таблицы:\n");
+            printf("Recorded hash table array indexes:\n");
         while(fscanf(fs, "%s", read_word) != EOF)
         {
             word_cleaning(read_word);
@@ -247,7 +236,7 @@ int main(int argc, char *argv[])
             if(index < 0)
                 index = -index;
             first_write:
-            if(read_word[0] != '\0')  // нужно иначе будут записываться дефисы заменяные на '\0'
+            if(read_word[0] != '\0')  // it is necessary otherwise hyphens will be written replaced by '\0'
             {
                if((pointer_htnode + index)->item.word[0] == '\0')
                {
@@ -255,10 +244,8 @@ int main(int argc, char *argv[])
                   (pointer_htnode + index)->item.quantity++;
                   counter_writes++;
                   coefficient_filling = (double)counter_writes / size;
-                  //printf("%s %lld ", read_word, index);
                   if(flag_technical_information_output == 1)
                          printf("%lld ", index);
-
                }
                else
                {
@@ -275,53 +262,52 @@ int main(int argc, char *argv[])
                     index++;
                     goto first_write;
                  }
-
                }
             }
             memset(read_word, 0, WORDLEN);
         }
         if(flag_technical_information_output == 1)
-        printf("\nУ нас вышло %d коллизий.\n", counter_collision);
-        printf("В данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n", coefficient_filling);
+        printf("\nWe got %d collisions.\n", counter_collision);
+        printf("At the moment, the fill factor of our data storage in the form of a hash table is equal to %.2f\n", coefficient_filling);
         for(int i = 0; i < size; i++)
         {
             sum_words = sum_words + (pointer_htnode + i)->item.quantity;
         }
-        printf("Количество слов в файле по записям в хеш-таблице %d.\n", sum_words);
+        printf("Number of words in the file based on entries in the hash table %d.\n", sum_words);
         if(flag_technical_information_output == 1)
         {
-            printf("Слова попавшие в коллизию:\n");
+            printf("Conflicted words:\n");
             for(int i = 0; i < counter_collision; i++)
             {
-               printf("%s индекс %d ", collision_words[i].item.word, collision_words[i].item.quantity);
+               printf("%s index %d ", collision_words[i].item.word, collision_words[i].item.quantity);
             }
         }
 
         menu_consol:
-        fprintf(stdout, "Выберите дальнейшее действие:\n");
-        fprintf(stdout, "a) Вывод списка всех слов с указанием их поторений.\n");
-        fprintf(stdout, "b) Ввод слова для проверки количества вхождений этого слова в файле %s.:\n", argv[1]);
-        fprintf(stdout, "q) Выход из программы.\n");
+        fprintf(stdout, "Select next action:\n");
+        fprintf(stdout, "a) Display a list of all words indicating their repetitions.\n");
+        fprintf(stdout, "b) Entering a word to check the number of occurrences of that word in a file %s.:\n", argv[1]);
+        fprintf(stdout, "q) Exit the program.\n");
         fscanf(stdin, "%c", &read_char);
-        while(getchar() != '\n')  // очистка буфера ввода после вызова scanf()
+        while(getchar() != '\n')  // clearing the input buffer after a call fscanf()
             continue;
-        // Вывод получившегося списка слов
+        // Outputting the resulting list of words
         if(read_char == 'a')
         {
-           printf("\nСписок слов в нашей хеш-таблице:\n");
+           printf("\nList of words in our hash table:\n");
            for(int i = 0; i < size; i++)
            {
               if((pointer_htnode + i)->item.word[0] != '\0')
-                 printf("Слово: %s, встречается %d, его индекс %d\n", (pointer_htnode + i)->item.word, (pointer_htnode + i)->item.quantity, i);
+                 printf("Word: %s, meets %d, its index %d\n", (pointer_htnode + i)->item.word, (pointer_htnode + i)->item.quantity, i);
            }
-           printf("\nВ данный момент коэффициент заполнения нашего харанилища данных в виде хеш-таблицы равен %.2f\n\n", coefficient_filling);
+           printf("At the moment, the fill factor of our data storage in the form of a hash table is equal to %.2f\n", coefficient_filling);
            goto menu_consol;
         }
         if(read_char == 'b')
         {
-            fprintf(stderr, "Введите слово:\n");
+            fprintf(stderr, "Enter a word:\n");
             fscanf(stdin, "%s", read_word);
-            while(getchar() != '\n')  // очистка буфера ввода после вызова scanf()
+            while(getchar() != '\n')  // clearing the input buffer after a call fscanf()
                 continue;
             word_cleaning(read_word);
             if(HASH_FUNCTION_NUMBER == 0)
@@ -339,17 +325,17 @@ int main(int argc, char *argv[])
             if(index < 0)
                 index = -index;
             first_read:
-            if(read_word[0] != '\0')  // нужно иначе будут записываться дефисы заменяные на '\0'
+            if(read_word[0] != '\0')  // it is necessary otherwise hyphens will be written replaced by '\0'
             {
                 if((pointer_htnode + index)->item.word[0] == '\0')
                 {
-                   printf("Введенное слово ни разу не встречается в файле %s\n", argv[1]);
+                   printf("The entered word does not appear once in the file %s\n", argv[1]);
                 }
                 else
                 {
                    if(strcmp((pointer_htnode + index)->item.word, read_word) == 0)
                    {
-                      printf("Слово %s встречается %d раз в текстовом файле %s\n", read_word, (pointer_htnode + index)->item.quantity, argv[1]);
+                      printf("Word %s meets %d times in a text file %s\n", read_word, (pointer_htnode + index)->item.quantity, argv[1]);
                    }
                    else
                    {
@@ -371,8 +357,8 @@ int main(int argc, char *argv[])
     end:
     free(pointer_htnode);
     if(flag_technical_information_output == 1)
-    free(collision_words);
-    printf("\nHello world!\n");
+       free(collision_words);
+    printf("This program exits!\n");
     return 0;
 }
 void word_cleaning(char *ptr)
@@ -390,5 +376,16 @@ void word_cleaning(char *ptr)
         }
     }
     strcpy(ptr, temp);
+}
+
+double pow(double value, double power)
+{
+    double multiply = 1.0;
+    while(power)
+    {
+        multiply = multiply * value;
+        power--;
+    }
+    return multiply;
 }
 
